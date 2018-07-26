@@ -200,7 +200,7 @@ class SwiftAPI():
     
     def set_position(self, x = None, y = None, z = None,
                            speed = None, relative = False,
-                           wait = False, timeout = 10):
+                           wait = False, e = None, timeout = 10, ):
         '''
         Move arm to the position (x,y,z) unit is mm, speed unit is mm/sec
         
@@ -212,6 +212,7 @@ class SwiftAPI():
             relative
             wait: if True, will block the thread, until get response or timeout
         
+            e amount of steps in the extruder
         Returns:
             True if successed
         '''
@@ -233,9 +234,11 @@ class SwiftAPI():
             cmd += ' Y{}'.format(y)
         if z != None:
             cmd += ' Z{}'.format(z)
+        if e != None:
+            cmd += ' E{}'.format(e)
         if speed != None:
             cmd += ' F{}'.format(speed)
-        
+
         ret = self._ports['service']['handle'].call(cmd)
         return ret.startswith('ok') # device return 'ok' even out of range
     
